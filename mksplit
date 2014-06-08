@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+include FileUtils
+
+if ARGV.length == 0 || ARGV[0] == nil
+  puts 'provide a file to split'
+  exit
+end
+
+if !File.exist?(ARGV[0])
+  puts 'provided file does not exist'
+  exit
+end
+
+infile = File.expand_path(ARGV[0])
+
+if infile[/\.split$/]
+  puts 'provided argument is a split directory, use the unpslit command'
+  exit
+end
+
+infilebase = File.basename(infile)
+splitdir = infilebase + '.split'
+
+if File.exist?(splitdir)
+  puts 'split directory already exists'
+  exit
+end
+
+splitsize = 999
+
+if ARGV.length > 1 and ARGV[1] != nil
+  splitsize = ARGV[1].to_i
+end
+
+mkdir(splitdir)
+cd(splitdir)
+
+#%x[ split -a 3 -b #{splitsize}m #{infile} ]
+system("split -a 3 -b #{splitsize}m #{infile}")

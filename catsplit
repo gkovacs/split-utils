@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+if ARGV.length == 0 || ARGV[0] == nil
+  puts 'provide a directory to unsplit'
+  exit
+end
+
+if !File.exist?(ARGV[0])
+  puts 'provided directory does not exist'
+  exit
+end
+
+splitdir = File.expand_path(ARGV[0])
+
+if not splitdir[/\.split$/]
+  puts 'provided argument is not a split directory, use the split command'
+  exit
+end
+
+system("cat #{splitdir}/x*")

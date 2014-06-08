@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+#scriptdir = File.expand_path(File.dirname(__FILE__))
+#catsplit = scriptdir + '/catsplit'
+
+#if !File.exist?(catsplit)
+#  puts 'cannot find catsplit executable'
+#  exit
+#end
+
+if ARGV.length < 2
+  puts 'need 2 arguments: image file, drive to restore to'
+  exit
+end
+
+infile = ARGV[0]
+outfile = ARGV[1]
+
+if !File.exist?(infile)
+  puts 'in file does not exist'
+  exit
+end
+
+if !File.exist?(outfile)
+  puts 'out file does not exist'
+  exit
+end
+
+infile = File.expand_path(infile)
+outfile = File.expand_path(outfile)
+
+if Process.uid != 0
+  puts 'needs to be run as root'
+  exit
+end
+
+if infile[/\.img\.gz\.split$/]
+  system("cat #{infile}/x* | gzcat | dd of=#{outfile} bs=256k")
+  exit
+end
+
+if infile[/\.img\.gz$/]
+  system("gzcat #{infile} | dd of=#{outfile} bs=256k")
+  exit
+end
+
+puts 'unsupported image format'
