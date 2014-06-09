@@ -38,4 +38,4 @@ mkdir(splitdir)
 cd(splitdir)
 
 #%x[ split -a 3 -b #{splitsize}m #{infile} ]
-system("split -a 3 -b #{splitsize}m #{infile}")
+system("split -a 3 -b #{splitsize}m '#{infile}'")
